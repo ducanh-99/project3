@@ -14,7 +14,7 @@ class Config:
     FLASKY_MAIL_SENDER = 'Flasky Admin <anhnd.vnist@gmail.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
+    DEBUG = True
     @staticmethod
     def init_app(app):
         pass
