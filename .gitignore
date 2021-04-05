@@ -132,3 +132,5 @@ dmypy.json
 # Sql
 data-dev.sqlite
 data.sqlite
+
+.vscode
