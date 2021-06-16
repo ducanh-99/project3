@@ -4,8 +4,8 @@ from flask_login import UserMixin, AnonymousUserMixin
 
 
 class Permission:
-    AVAILAIBLE = 0x01
-    RESERVE = 0x02
+    EXAMINATION = 0x01
+    CLINIC = 0x02
     ADMINISTER = 0x80
 
 
@@ -23,8 +23,9 @@ class Role(db.Model):
     @staticmethod
     def insert_roles():
         roles = {
-            'User': [Permission.AVAILAIBLE, Permission.RESERVE],
-            'Administrator': [Permission.AVAILAIBLE, Permission.RESERVE,
+            'User': [Permission.EXAMINATION, Permission.CLINIC],
+            'Doctor' : [Permission.EXAMINATION, Permission.CLINIC],
+            'Administrator': [Permission.EXAMINATION, Permission.CLINIC,
                               Permission.ADMINISTER],
         }
         default_role = 'User'
@@ -83,6 +84,10 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
 
+class Clinic(db.Model):
+    __tablename__ = 'clinics'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True, index=True)
 
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
