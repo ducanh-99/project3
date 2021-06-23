@@ -1,0 +1,6 @@
+include:
+  - project: 'digilife/workloads/ci-template'
+    ref: master
+    file: '/gitlab-ci.v1.0.yaml'
+variables:
+  IMAGE_REPOSITORY: asia.gcr.io/digilife-registry/o2o/hr-service
