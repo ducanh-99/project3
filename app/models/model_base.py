@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.helpers.time_helper import get_current_time
 
 from sqlalchemy import Column, Integer, DateTime
@@ -19,5 +20,6 @@ class BareBaseModel(Base):
     __abstract__ = True
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    created_at = Column(DateTime, default=get_current_time())
-    updated_at = Column(DateTime, default=get_current_time(), onupdate=get_current_time())
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now(),
+                        onupdate=datetime.now())

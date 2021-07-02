@@ -11,8 +11,6 @@ class Settings(BaseSettings):
     DEBUG = os.getenv('DEBUG', True)
     SECRET_KEY = os.getenv('SECRET_KEY', '')
     BASE_API_PREFIX = os.getenv('BASE_API_PREFIX', '')
-    TEKO_API_PREFIX = '/teko'
-    DIGI_API_PREFIX = '/digi'
     BACKEND_CORS_ORIGINS = ['*']
     DATABASE_URL = os.getenv('SQL_DATABASE_URL', '')
     ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24 * 7  # Token expired after 7 days
