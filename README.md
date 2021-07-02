@@ -1,16 +1,14 @@
-# HR Service
-
 ## Mô tả
-Manager Hr orgchart
+Đồ án thiết kế 
 
 ## Installation
 **Cách 1:**
 - Clone Project
-- Cài đặt Postgresql & Create Database
+- Cài đặt Mysql & Create Database
 - Cài đặt requirements.txt
 - Run project ở cổng 8000
 ```
-// Tạo postgresql Databases via CLI (Ubuntu 20.04)
+// Tạo Mysql Databases via CLI (Ubuntu 20.04)
 $ sudo -u postgres psql
 # CREATE DATABASE hr_service;
 # CREATE USER db_user WITH PASSWORD 'secret123';
@@ -19,8 +17,6 @@ $ sudo -u postgres psql
 
 ```
 // Clone project & run
-$ git clone git@git.teko.vn:digi-life/o2o/hr-service.git
-$ cd hr-service
 $ virtualenv -p python3 .venv
 $ source .venv/bin/activate
 $ pip install -r requirements.txt
@@ -32,8 +28,6 @@ $ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 - Clone Project
 - Run docker-compose
 ```
-$ git clone git@git.teko.vn:digi-life/o2o/hr-service.git
-$ cd hr-service
 $ docker-compose up -d      # auto build docker image depend on Dockerfile & run service
 $ docker-compose build      # build docker image depend on Dockerfile
 ```
@@ -64,7 +58,7 @@ $ docker-compose build      # build docker image depend on Dockerfile
 ├── Dockerfile  
 ├── env.example  
 ├── logging.ini     // cấu hình logging  
-├── postgresql.conf // file cấu hình postgresql, sử dụng khi run docker-compose  
+├── mysql.conf // file cấu hình Mysql, sử dụng khi run docker-compose  
 ├── pytest.ini      // file setup cho pytest  
 ├── README.md  
 └── requirements.txt
