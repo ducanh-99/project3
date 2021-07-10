@@ -8,6 +8,6 @@ class Patient(BareBaseModel):
 
     name = Column(String(255), nullable=False)
     gender = Column(String(255), nullable=False)
-    age = Column(String(255), nullable=False)
+    age = Column(Integer, nullable=False)
     diagnostic = Column(String(255), nullable=False)
     disease = Column(String(255))

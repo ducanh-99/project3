@@ -31,6 +31,8 @@ def get_application(testing: bool = False) -> FastAPI:
     )
     if testing is False:
         application.add_middleware(DBSessionMiddleware, db_url=settings.DATABASE_URL)
+    from app.clinic import list_clinic
+
     application.include_router(router=router, prefix=settings.BASE_API_PREFIX)
     application.add_exception_handler(CustomException, http_exception_handler)
     application.add_exception_handler(Exception, fastapi_error_handler)

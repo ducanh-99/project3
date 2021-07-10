@@ -23,4 +23,5 @@ def create(clinic: ClinicCreate):
 
 @router.get("/{id_clinic}")
 async def get(id_clinic: int):
+    from app.clinic import list_clinic
     pass
