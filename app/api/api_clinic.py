@@ -1,3 +1,4 @@
+from datetime import time
 from app.helpers.paging import C
 from fastapi import APIRouter
 from fastapi.params import Depends
@@ -22,6 +23,9 @@ def create(clinic: ClinicCreate):
 
 
 @router.get("/{id_clinic}")
-async def get(id_clinic: int):
-    from app.clinic import list_clinic
-    pass
+async def get(id_clinic: int, _time: time):
+    # from app.models import Clinic
+    # from fastapi_sqlalchemy import db
+    # clinic = db.session.query(Clinic).filter(Clinic.id == id_clinic).first()
+    # clinic.time_mean = _time
+    db.session.commit()

@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 from app.db.base import SessionLocal
 from app.models import Clinic, History
 
@@ -23,4 +24,10 @@ class ClinicBase(object):
     def leave_person(self):
         self.queue.pop()
 
-    
+    def get_time_wait(self):
+        if not self.queue:
+            return 0
+        first_person = db.query(History).order_by(
+            History.id.desc()).filter(History.patient_id == self.queue[0]).first()
+        first_person.time_start
+        return (len(self.queue)-1)*self.mean
