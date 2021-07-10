@@ -14,3 +14,8 @@ class StaffContractType(enum.Enum):
 class SearchTreeParam(enum.Enum):
     TREE = 'tree'
     LIST = 'list'
+
+class Gender(enum.Enum):
+    Male = "Nam"
+    Female = "Nữ"
+    Other = "Khác"

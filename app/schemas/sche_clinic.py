@@ -1,4 +1,3 @@
-from app.services.base_service import BaseService
 from typing import Optional
 from pydantic import BaseModel
 
@@ -14,5 +13,5 @@ class ClinicListRequest(PaginationParams):
     search: Optional[str]
 
 
-class ClinicItemResponse(BaseService):
+class ClinicItemResponse(BaseModel):
     name: str

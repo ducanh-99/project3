@@ -3,7 +3,7 @@ from app.core.singleton import Singleton
 
 
 class Neurology(Singleton, ClinicBase):
-    id_clinic = 1
+    id_clinic = 6
 
     def __init__(self) -> None:
         super().__init__()
