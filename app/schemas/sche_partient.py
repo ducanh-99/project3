@@ -11,3 +11,16 @@ class RecommendPatient(BaseModel):
     age: int
     diagnostic: str
     disease: Optional[str]
+
+
+class RecommendResponse(BaseModel):
+
+    class Clinic(BaseModel):
+        id: int
+        name: str
+
+        class Config:
+            orm_mode = True
+
+    total_wait: float
+    clinis: List[Clinic]

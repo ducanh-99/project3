@@ -1,3 +1,4 @@
+from app.models.model_history import History
 from typing import List
 from fastapi_sqlalchemy import db
 
@@ -27,8 +28,7 @@ class ClinicService(BaseService):
                           params=list_clinic_request)
 
         for c in list_clinic:
-            print(c.get_time_wait())
-
+            print(id(c.queue))
         return clinic
 
     def recommend(self, clinics: List[int]):
@@ -39,7 +39,19 @@ class ClinicService(BaseService):
         res = [x for _, x in sorted(zip(time_wait, clinics))]
 
         
-        return res
+        return res, sum(time_wait)
+    
+    def get_by_id(self, id):
+        return db.session.query(self.model).filter(self.model.id == id).first()
+    
+    def get_time_wait(self):
+        first_person = db.session.query(History).order_by(
+            History.id.desc()).filter(History.patient_id == self.queue[0]).first()
+        clinic = db.query(Clinic).filter(
+            Clinic.id == self.id_clinic).first()
+        
+        first_person.time_start
+        return (len(self.queue)-1)*self.mean
 
 
 clinic_service = ClinicService()

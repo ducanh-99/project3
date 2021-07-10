@@ -7,15 +7,14 @@ from fastapi.params import Depends
 from app.services.clinic_service import ClinicService
 from app.services.patient_service import patient_service
 from app.schemas.sche_clinic import ClinicCreate, ClinicListRequest
-from app.schemas.sche_partient import RecommendPatient
+from app.schemas.sche_partient import RecommendPatient, RecommendResponse
 
 
 router = APIRouter()
 
 
-@router.post("/recommend")
+@router.post("/recommend", response_model=RecommendResponse)
 def recommend(patient = Depends(RecommendPatient), clinics: Optional[List[int]] = Query(default=[])):
-    print(clinics)
     return patient_service.recommend(patient, clinics)
 
 
