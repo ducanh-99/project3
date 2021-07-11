@@ -7,8 +7,8 @@ from app.models import Patient, ClinicHistory, History
 from app.services.base_service import BaseService
 from app.services.clinic_service import clinic_service
 from app.services.stored_service import storage
-from app.helpers.paging import Page, paginate
-from app.clinic import get_clinic_by_id
+from app.helpers.exception_handler import CustomException
+from app.clinic import get_clinic_by_id, list_clinic
 from app.schemas.sche_partient import RecommendResponse
 
 
@@ -27,7 +27,10 @@ class PatientService(BaseService):
         for clinic_id in clinics:
             clinis_model.append(clinic_service.get_by_id(clinic_id))
 
-        self.add_person_to_clinic(id_patient=patient.id, id_clinic=clinics[0])
+        # self.add_person_to_clinic(id_patient=patient.id, id_clinic=clinics[0])
+
+        storage.add_patient(id_patient=patient.id, clincis=clinics)
+        print(storage)
 
         return RecommendResponse(total_wait=total_wait, clinis=clinis_model)
 
@@ -45,11 +48,35 @@ class PatientService(BaseService):
 
         return new_patient
 
-    def add_person_to_clinic(self, id_patient, id_clinic):
+    def add_person_to_clinic(self, id_patient):
+        id_clinic = storage.get_clinic(id_patient=id_patient)
+        if id_clinic is None:
+            raise CustomException(http_code=400, code='001',
+                                  message='Bệnh nhân chưa được chỉ định')
         clinic = get_clinic_by_id(id_clinic=id_clinic)
         clinic.add_person(id_person=id_patient)
 
         self.add_history(id_patient=id_patient, id_clinic=id_clinic)
+
+    def remove_person_to_clinic(self, id_patient):
+        id_clinic = storage.get_clinic(id_patient=id_patient)
+
+        clinic = get_clinic_by_id(id_clinic=id_clinic)
+
+        if clinic.get_person_in_clinic() == id_patient:
+            clinic.leave_person()
+            self.update_time_end(id_patient=id_patient, id_clinic=id_clinic)
+            storage.remove_clinic(id=id_patient)
+
+    def update_time_end(self, id_patient, id_clinic):
+        history = db.session.query(History)\
+            .join(ClinicHistory)\
+            .filter(History.patient_id == id_patient)\
+            .order_by(History.id.desc())\
+            .filter(ClinicHistory.clinic_id == id_clinic)\
+            .first()
+        history.time_end = datetime.now()
+        db.session.commit()
 
     def add_history(self, id_patient, id_clinic):
         history = History(

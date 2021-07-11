@@ -1,3 +1,4 @@
+from app.schemas.sche_base import DataResponse
 from typing import List, Optional
 from fastapi import APIRouter, Depends
 from fastapi.param_functions import Query
@@ -14,21 +15,18 @@ router = APIRouter()
 
 
 @router.post("/recommend", response_model=RecommendResponse)
-def recommend(patient = Depends(RecommendPatient), clinics: Optional[List[int]] = Query(default=[])):
+def recommend(patient=Depends(RecommendPatient), clinics: Optional[List[int]] = Query(default=[])):
     return patient_service.recommend(patient, clinics)
 
 
 @router.post("/add_clinics")
-def add_clinics():
-    
-    pass
+def add_clinics(id_patient: int):
+
+    patient_service.add_person_to_clinic(id_patient=id_patient)
+
+    return DataResponse().success_response(data={"id": id_patient})
 
 
-@router.post("/finish_clinic/{id_clinic}")
-def finish():
-    pass
-
-
-@router.get("/check_clinic")
-def check_clinic():
-    pass
+@router.post("/finish_clinic")
+def finish(id_patient: int):
+    patient_service.remove_person_to_clinic(id_patient=id_patient)

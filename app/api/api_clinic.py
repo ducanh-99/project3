@@ -28,4 +28,5 @@ async def get(id_clinic: int, _time: time):
     # from fastapi_sqlalchemy import db
     # clinic = db.session.query(Clinic).filter(Clinic.id == id_clinic).first()
     # clinic.time_mean = _time
-    db.session.commit()
+    # db.session.commit()
+    pass
