@@ -1,5 +1,6 @@
+from app.models.model_clinic_history import ClinicHistory
 from typing import List
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from app.db.base import SessionLocal
 from app.models import Clinic, History
 
@@ -16,7 +17,7 @@ class ClinicBase(object):
         super().__init__()
         self.clinic_model = db.query(Clinic).filter(
             Clinic.id == self.id_clinic).first()
-        self.mean = self.clinic_model.time_mean
+        self.mean = datetime.combine(date.min, self.clinic_model.time_mean) - datetime.min
 
     def add_person(self, id_person):
         self.queue.append(id_person)
@@ -31,11 +32,16 @@ class ClinicBase(object):
         
     def get_time_wait(self):
         if not self.queue:
-            return 0
-        first_person = db.query(History).order_by(
-            History.id.desc()).filter(History.patient_id == self.queue[0]).first()
-        
-        return (len(self.queue)-1)*self.mean + datetime.now()-first_person.time_start
+            return timedelta()
+        print(self.queue, self.id_clinic)
+        first_person = db.query(History)\
+            .join(ClinicHistory)\
+            .filter(History.patient_id == self.queue[0])\
+            .order_by(History.id.desc())\
+            .filter(ClinicHistory.clinic_id == self.id_clinic)\
+            .first()
+        print(first_person)
+        return (len(self.queue)-1)*self.mean
 
     def __str__(self) -> str:
         return str(self.queue)

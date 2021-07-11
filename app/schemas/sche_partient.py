@@ -1,3 +1,4 @@
+from datetime import timedelta
 from app.helpers.enums import Gender
 from typing import List, Optional
 from pydantic import BaseModel
@@ -21,6 +22,6 @@ class RecommendResponse(BaseModel):
 
         class Config:
             orm_mode = True
-
-    total_wait: float
+    id_patient: int
+    total_wait: timedelta
     clinis: List[Clinic]

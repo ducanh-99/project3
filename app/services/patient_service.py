@@ -30,9 +30,8 @@ class PatientService(BaseService):
         # self.add_person_to_clinic(id_patient=patient.id, id_clinic=clinics[0])
 
         storage.add_patient(id_patient=patient.id, clincis=clinics)
-        print(storage)
 
-        return RecommendResponse(total_wait=total_wait, clinis=clinis_model)
+        return RecommendResponse(total_wait=total_wait, clinis=clinis_model, id_patient=patient.id)
 
     def add_partient(self, patient: RecommendPatient):
         new_patient = Patient(

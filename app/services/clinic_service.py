@@ -1,3 +1,4 @@
+from datetime import timedelta
 from app.models.model_history import History
 from typing import List
 from fastapi_sqlalchemy import db
@@ -36,10 +37,10 @@ class ClinicService(BaseService):
         for clinic_id in clinics:
             clinic = list_clinic[clinic_id-1]
             time_wait.append(clinic.get_time_wait())
-        res = [x for _, x in sorted(zip(time_wait, clinics))]
+        # res = [x for _, x in sorted(zip(time_wait, clinics))]
+        time_wait, clinics = zip(*sorted(zip(time_wait, clinics)))
 
-        
-        return res, sum(time_wait)
+        return clinics, sum(time_wait, timedelta())
     
     def get_by_id(self, id):
         return db.session.query(self.model).filter(self.model.id == id).first()
