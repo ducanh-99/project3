@@ -25,6 +25,12 @@ class StoragePatient(Singleton):
 
         return clinic[1:]
     
+    def get_clinics(self, id_patient: int):
+        clincis = self.stored.get(id_patient)
+        if clincis is None:
+            return None
+        return clincis
+    
     def __str__(self) -> str:
         return str(self.stored)
 

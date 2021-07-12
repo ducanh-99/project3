@@ -4,8 +4,8 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 
 
-from app.services.clinic_service import ClinicService
-from app.schemas.sche_clinic import ClinicCreate, ClinicListRequest
+from app.services.clinic_service import clinic_service
+from app.schemas.sche_clinic import ClinicCreate, ClinicListRequest, ClinicDetail
 from app.clinic.cardiology import Cardiology
 
 router = APIRouter()
@@ -14,19 +14,14 @@ router = APIRouter()
 @router.get("", )
 async def get(list_clinic_request: ClinicListRequest = Depends()):
 
-    return ClinicService().get_list_clinic(list_clinic_request=list_clinic_request)
+    return clinic_service.get_list_clinic(list_clinic_request=list_clinic_request)
 
 
 @router.post("", deprecated=True)
 def create(clinic: ClinicCreate):
-    return ClinicService().create_clinic(clinic=clinic)
+    return clinic_service.create_clinic(clinic=clinic)
 
 
-@router.get("/{id_clinic}")
-async def get(id_clinic: int, _time: time):
-    # from app.models import Clinic
-    # from fastapi_sqlalchemy import db
-    # clinic = db.session.query(Clinic).filter(Clinic.id == id_clinic).first()
-    # clinic.time_mean = _time
-    # db.session.commit()
-    pass
+@router.get("/{id_clinic}", response_model=ClinicDetail)
+async def get(id_clinic: int):
+    return clinic_service.get_clinic_by_id(id_clinic=id_clinic)

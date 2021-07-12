@@ -1,6 +1,6 @@
 from typing import List
 from datetime import datetime
-from app.schemas.sche_partient import RecommendPatient
+from app.schemas.sche_partient import IdRecommendPatient, RecommendPatient
 from fastapi_sqlalchemy import db
 
 from app.models import Patient, ClinicHistory, History
@@ -17,7 +17,7 @@ class PatientService(BaseService):
     def __init__(self):
         super().__init__(Patient)
 
-    def recommend(self, patient: RecommendPatient, clinics: List[int]):
+    def recommend(self, patient: IdRecommendPatient, clinics: List[int]):
         if not patient.id:
             new_patient = self.add_partient(patient)
             patient.id = new_patient.id
@@ -30,9 +30,8 @@ class PatientService(BaseService):
         # self.add_person_to_clinic(id_patient=patient.id, id_clinic=clinics[0])
 
         storage.add_patient(id_patient=patient.id, clincis=clinics)
-        print(storage)
 
-        return RecommendResponse(total_wait=total_wait, clinis=clinis_model)
+        return RecommendResponse(total_wait=total_wait, clinis=clinis_model, id_patient=patient.id)
 
     def add_partient(self, patient: RecommendPatient):
         new_patient = Patient(
@@ -68,6 +67,8 @@ class PatientService(BaseService):
             self.update_time_end(id_patient=id_patient, id_clinic=id_clinic)
             storage.remove_clinic(id=id_patient)
 
+        return self.recommend(IdRecommendPatient(id=id_patient), storage.get_clinics(id_patient))
+
     def update_time_end(self, id_patient, id_clinic):
         history = db.session.query(History)\
             .join(ClinicHistory)\
@@ -80,7 +81,8 @@ class PatientService(BaseService):
 
     def add_history(self, id_patient, id_clinic):
         history = History(
-            patient_id=id_patient
+            patient_id=id_patient,
+            time_start=datetime.now()
         )
         db.session.add(history)
         db.session.flush()
