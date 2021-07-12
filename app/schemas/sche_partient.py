@@ -3,8 +3,11 @@ from app.helpers.enums import Gender
 from typing import List, Optional
 from pydantic import BaseModel
 
+class IdRecommendPatient(BaseModel):
+    id: int
 
-class RecommendPatient(BaseModel):
+
+class RecommendPatient(IdRecommendPatient):
 
     id: Optional[int]
     name: str

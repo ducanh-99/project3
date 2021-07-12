@@ -29,4 +29,4 @@ def add_clinics(id_patient: int):
 
 @router.post("/finish_clinic")
 def finish(id_patient: int):
-    patient_service.remove_person_to_clinic(id_patient=id_patient)
+    return patient_service.remove_person_to_clinic(id_patient=id_patient)

@@ -19,6 +19,9 @@ class ClinicBase(object):
             Clinic.id == self.id_clinic).first()
         self.mean = datetime.combine(date.min, self.clinic_model.time_mean) - datetime.min
 
+    def get_list_patient(self) -> List[int]:
+        return self.queue
+
     def add_person(self, id_person):
         self.queue.append(id_person)
 
