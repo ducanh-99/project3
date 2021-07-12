@@ -1,4 +1,5 @@
-from datetime import timedelta
+from app.models.model_clinic_history import ClinicHistory
+from datetime import datetime, timedelta
 from app.models.model_history import History
 from typing import List
 from fastapi_sqlalchemy import db
@@ -9,6 +10,9 @@ from app.services.base_service import BaseService
 from app.helpers.paging import Page, paginate
 from app.clinic import list_clinic, Cardiology
 from app.clinic.clinic_base import ClinicBase
+
+
+# def get_history(id_pa):
 
 
 class ClinicService(BaseService):
@@ -36,11 +40,23 @@ class ClinicService(BaseService):
         time_wait = []
         for clinic_id in clinics:
             clinic = list_clinic[clinic_id-1]
-            time_wait.append(clinic.get_time_wait())
+            time_wait.append(self.get_time_wait(clinic=clinic))
         # res = [x for _, x in sorted(zip(time_wait, clinics))]
         time_wait, clinics = zip(*sorted(zip(time_wait, clinics)))
 
         return clinics, sum(time_wait, timedelta())
+
+    def get_time_wait(self, clinic: ClinicBase) -> timedelta:
+        if not clinic.queue:
+            return timedelta()
+        # print(self.queue, self.id_clinic)
+        first_person = db.session.query(History)\
+            .join(ClinicHistory)\
+            .filter(History.patient_id == clinic.get_person_in_clinic())\
+            .order_by(History.id.desc())\
+            .filter(ClinicHistory.clinic_id == clinic.id_clinic)\
+            .first()
+        return clinic.calculate_mean() + datetime.now() - first_person.time_start
     
     def get_by_id(self, id):
         return db.session.query(self.model).filter(self.model.id == id).first()
